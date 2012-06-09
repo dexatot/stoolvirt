@@ -40,7 +40,9 @@ object DefaultParser extends JavaTokenParsers {
 
     def apply(input: String) = parseAll(command, input)
 
-    def command = action~properties~message ^^ {case a~p~m => new Command(a, p, m)}
+    def command = action ~ properties ~ message ^^ {
+        case a ~ p ~ m => new Command(a, p, m)
+    }
 
     val action = ident
 
@@ -48,11 +50,12 @@ object DefaultParser extends JavaTokenParsers {
 
     val properties = rep(property)
 
-    val property = "-"~propertyName~propertyValue ^^ {
-        case "-"~n~v => new Property(n,v)
+    val property = "-" ~ propertyName ~ propertyValue ^^ {
+        case "-" ~ n ~ v => new Property(n, v)
     }
 
     val propertyName: Parser[String] = ident
 
     val propertyValue: Parser[String] = ident
 }
+
