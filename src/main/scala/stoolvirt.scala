@@ -2,13 +2,12 @@ import scala.util.parsing.combinator._
 import scala.util.matching.Regex  
 import scala.util.parsing.input.CharSequenceReader
 
-import scala.collection.mutable.Stack  
-import scala.collection.mutable.Queue
-
-case class Command(action: String, properties: List[Property], message: String)
+case class Command(action: String, properties: List[Property], name: String)
 case class Property(name: String, value: String)
 
 object SToolVirt {
+
+    import LibvirtWrapper._
 
     class Terminal() extends RegexParsers {
 
@@ -25,14 +24,19 @@ object SToolVirt {
             }
         }
 
-        def scan(str: String) = {
-            val input = new Queue[String]            
-
-            val command = DefaultParser(str)
-
-            println(command.get.action)            
+        def scan(str: String) = {            
+            val command = DefaultParser(str).get
+            chooseActions(command)
         }
 
+        def chooseActions(command: Command) = command.action match {
+            case "create"   => LibvirtWrapper.createAction(command.properties, command.name)
+            case "destroy"  => LibvirtWrapper.destroyAction(command.name)
+            case "start"    => LibvirtWrapper.startAction(command.name)
+            case "stop"     => LibvirtWrapper.stopAction(command.name)
+            case "ping"     => LibvirtWrapper.pingAction(command.name)
+            case _          => Console.println("error")
+        }
     }    
 }
 
