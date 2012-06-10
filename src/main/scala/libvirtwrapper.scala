@@ -28,15 +28,15 @@ object LibvirtWrapper {
 
     def infoAction(name: String) = {
         val libVirt = new LibVirt()
-        libVirt.getDomain()
+        libVirt.getDomain(name)
     }
 
     class LibVirt {
         
-        val conn = new Connect("test:///default", true)
+        val conn = new Connect("lxc:///default", true)
 
-        def getDomain() = {
-            val testDomain = conn.domainLookupByName("test")
+        def getDomain(name: String) = {
+            val testDomain = conn.domainLookupByName(name)
             println(testDomain.getInfo())
         }
 
