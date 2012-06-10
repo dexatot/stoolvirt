@@ -33,7 +33,7 @@ object LibvirtWrapper {
 
     class LibVirt {
         
-        val conn = new Connect("lxc:///default", true)
+        val conn = new Connect("lxc:///", true)
 
         def getDomain(name: String) = {
             val testDomain = conn.domainLookupByName(name)
