@@ -2,11 +2,13 @@
 ((:runtime-deps
 ("/Users/kmax/.sbt/boot/scala-2.9.2/lib/scala-library.jar"
 "/Users/kmax/P/S/stoolvirt/target/scala-2.9.2/classes"
-"/Users/kmax/P/S/stoolvirt/target/scala-2.9.2/classes")
+"/Users/kmax/P/S/stoolvirt/target/scala-2.9.2/classes"
+"/Users/kmax/P/S/stoolvirt/lib/libvirt-0.4.7.jar")
 :module-name
 "stoolvirt"
 :compile-deps
-("/Users/kmax/.sbt/boot/scala-2.9.2/lib/scala-library.jar")
+("/Users/kmax/.sbt/boot/scala-2.9.2/lib/scala-library.jar"
+"/Users/kmax/P/S/stoolvirt/lib/libvirt-0.4.7.jar")
 :version
 "0.1"
 :name

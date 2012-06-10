@@ -35,6 +35,7 @@ object SToolVirt {
             case "start"    => LibvirtWrapper.startAction(command.name)
             case "stop"     => LibvirtWrapper.stopAction(command.name)
             case "ping"     => LibvirtWrapper.pingAction(command.name)
+            case "info"     => LibvirtWrapper.infoAction(command.name)
             case _          => Console.println("error")
         }
     }    

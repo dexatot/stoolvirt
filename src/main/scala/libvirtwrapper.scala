@@ -1,3 +1,5 @@
+import org.libvirt._
+
 import scala.collection.mutable._
 
 object LibvirtWrapper {
@@ -22,6 +24,22 @@ object LibvirtWrapper {
 
     def pingAction(name: String) = {
         
+    }
+
+    def infoAction(name: String) = {
+        val libVirt = new LibVirt()
+        libVirt.getDomain()
+    }
+
+    class LibVirt {
+        
+        val conn = new Connect("test:///default", true)
+
+        def getDomain() = {
+            val testDomain = conn.domainLookupByName("test")
+            println(testDomain.getInfo())
+        }
+
     }
 
 }
