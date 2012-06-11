@@ -5,41 +5,127 @@ import scala.collection.mutable._
 object LibvirtWrapper {
 
     import Property._
+
+    val libVirt = new LibVirt()
     
-    def createAction(parametr: List[Property], name: String) = {
+    def createAction(parametrs: List[Property], name: String) = {
         
+        val rootfs = "/opt/rootfs/" + name
+        var os = ""
+        var net = networkXml("default")
+
+        for( property <- parametrs ) {
+            property.name match {
+                case "os" => os = property.value
+                case "net" => net = networkXml(property.value)
+                case _ => println("error")
+            }
+        }
+
+        // println(baseXml(os, rootfs, net))
+        
+        libVirt.domainDefine(name)
+
     }
 
-    def destroyAction(name: String) = {
-        
+    def destroyAction(name: String) = {        
+        libVirt.domainDestroy(name)
     }
 
     def startAction(name: String) = {
-        
+        libVirt.domainCreate(name)   
     }
 
     def stopAction(name: String) = {
-        
+        libVirt.domainShutdown(name)   
     }
 
-    def pingAction(name: String) = {
-        
+    def pingAction(name: String) = {                
+        libVirt.domainReboot(name)
     }
 
-    def infoAction(name: String) = {
-        val libVirt = new LibVirt()
-        libVirt.getDomain(name)
+    def infoAction(name: String) = {        
+        libVirt.getDomainInfo(name)
     }
 
     class LibVirt {
         
         val conn = new Connect("lxc:///", true)
 
-        def getDomain(name: String) = {
-            val testDomain = conn.domainLookupByName(name)
-            println(testDomain.getInfo())
+        def domainReboot(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.reboot(1))
+
         }
+
+        def getDomainInfo(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.getInfo())
+        }
+
+        def domainDestroy(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.destroy())
+        }
+
+        def domainShutdown(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.shutdown())
+        }
+
+        def domainCreate(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.create())
+        }
+
+        def domainDefine(xml: String) = {            
+            println(conn.domainDefineXML(xml))
+        }
+
 
     }
 
+    def defaultNetwork() = 
+        <interface type='network'>
+            <source network='default'/>
+        </interface>  
+           
+    def brNetwork() = 
+        <interface type='bridge'>
+            <source network='br0'/> 
+            <mac address='00:11:22:34:34:34'/>
+        </interface>  
+
+    def networkXml(param: String): Any = {
+        param match {
+            case "bridge" => brNetwork
+            case "default" => defaultNetwork
+            case _  => defaultNetwork
+        }        
+    }           
+
+    def baseXml(name: String, rootfs: String, net: Any) = 
+        <domain type='lxc'>
+            <name>{name}</name>
+            <memory>128000</memory>
+            <os>
+                <type>exe</type>
+                <init>/sbin/init</init>
+            </os>
+            <vcpu>1</vcpu>
+            <clock offset='utc'/>
+            <on_poweroff>destroy</on_poweroff>
+            <on_reboot>restart</on_reboot>
+            <on_crash>destroy</on_crash>
+            <devices>
+                <emulator>/usr/lib/libvirt/libvirt_lxc</emulator>
+                <filesystem type='mount'>
+                    <source dir={rootfs}/>
+                    <target dir='/'/>
+                </filesystem>
+                {net}                
+                <console type='pty' />
+            </devices>
+        </domain>
+    
 }
