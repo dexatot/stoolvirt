@@ -21,10 +21,8 @@ object LibvirtWrapper {
                 case _ => println("error")
             }
         }
-
-        // println(baseXml(os, rootfs, net))
         
-        libVirt.domainDefine(name)
+        libVirt.domainDefine(baseXml(os, rootfs, net).toString)
 
     }
 
@@ -35,12 +33,16 @@ object LibvirtWrapper {
     def startAction(name: String) = {
         libVirt.domainCreate(name)   
     }
-
-    def stopAction(name: String) = {
-        libVirt.domainShutdown(name)   
+    
+    def suspendAction(name: String) = {
+        libVirt.domainSuspend(name)   
     }
 
-    def pingAction(name: String) = {                
+    def resumeAction(name: String) = {
+        libVirt.domainResume(name)       
+    }
+    
+    def rebootAction(name: String) = {                
         libVirt.domainReboot(name)
     }
 
@@ -51,11 +53,11 @@ object LibvirtWrapper {
     class LibVirt {
         
         val conn = new Connect("lxc:///", false)
-
+        
         def domainReboot(name: String) = {
             val domain = conn.domainLookupByName(name)
-            println(domain.reboot(1))
-
+            println(domain.destroy())
+            println(domain.create())            
         }
 
         def getDomainInfo(name: String) = {
@@ -68,11 +70,6 @@ object LibvirtWrapper {
             println(domain.destroy())
         }
 
-        def domainShutdown(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.shutdown())
-        }
-
         def domainCreate(name: String) = {
             val domain = conn.domainLookupByName(name)
             println(domain.create())
@@ -82,6 +79,15 @@ object LibvirtWrapper {
             println(conn.domainDefineXML(xml))
         }
 
+        def domainSuspend(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.suspend())   
+        }
+
+        def domainResume(name: String) = {
+            val domain = conn.domainLookupByName(name)
+            println(domain.resume())   
+        }
 
     }
 
