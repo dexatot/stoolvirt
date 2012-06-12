@@ -24,9 +24,13 @@ object SToolVirt {
             }
         }
 
-        def scan(str: String) = {            
-            val command = DefaultParser(str).get
-            chooseActions(command)
+        def scan(str: String) = {   
+            try { 
+                val command = DefaultParser(str).get
+                chooseActions(command)
+            } catch {
+                case e: RuntimeException => println("error parsing")
+            }                     
         }
 
         def chooseActions(command: Command) = command.action match {
@@ -37,7 +41,7 @@ object SToolVirt {
             case "resume"     => LibvirtWrapper.resumeAction(command.name)
             case "reboot"     => LibvirtWrapper.rebootAction(command.name)
             case "info"     => LibvirtWrapper.infoAction(command.name)
-            case _          => Console.println("error")
+            case _          => Console.println("not found command")
         }
     }    
 }

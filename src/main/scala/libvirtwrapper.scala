@@ -55,38 +55,66 @@ object LibvirtWrapper {
         val conn = new Connect("lxc:///", false)
         
         def domainReboot(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.destroy())
-            println(domain.create())            
+            try { 
+                val domain = conn.domainLookupByName(name)
+                println(domain.destroy())
+                println(domain.create())             
+            } catch {
+              case e: LibvirtException => println("error domainReboot")
+            }            
         }
 
         def getDomainInfo(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.getInfo())
+            try { 
+                val domain = conn.domainLookupByName(name)
+                println(domain.getInfo())
+            } catch {
+              case e: LibvirtException => println("error getDomainInfo")
+            }
         }
 
         def domainDestroy(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.destroy())
+            try { 
+                val domain = conn.domainLookupByName(name)
+                println(domain.destroy())
+            } catch {
+              case e: LibvirtException => println("error domainDestroy")
+            }
         }
 
         def domainCreate(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.create())
+            try { 
+                val domain = conn.domainLookupByName(name)
+                println(domain.create())
+            } catch {
+              case e: LibvirtException => println("error domainCreate")
+            }
         }
 
         def domainDefine(xml: String) = {            
-            println(conn.domainDefineXML(xml))
+            try { 
+                println(conn.domainDefineXML(xml))
+            } catch {
+              case e: LibvirtException => println("error domainDefine")
+            }
         }
 
         def domainSuspend(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.suspend())   
+            try { 
+                val domain = conn.domainLookupByName(name)
+                println(domain.suspend())   
+            } catch {
+              case e: LibvirtException => println("error domainSuspend")
+            }
         }
 
         def domainResume(name: String) = {
-            val domain = conn.domainLookupByName(name)
-            println(domain.resume())   
+            try { 
+                val domain = conn.domainLookupByName(name)
+                println(domain.resume())   
+            } catch {
+              case e: LibvirtException => println("error domainResume")
+            }
         }
 
     }
