@@ -1,7 +1,5 @@
 import org.libvirt._
 
-import scala.collection.mutable._
-
 object LibvirtWrapper {
 
     import Property._
@@ -50,9 +48,39 @@ object LibvirtWrapper {
         libVirt.getDomainInfo(name)
     }
 
+    def listAction(param: String) = {
+        param match {
+            case "inactive" => libVirt.domainListInactive
+            case "active"   => libVirt.domainListActive
+            case _          => println("param not supported")
+        }
+    }
+
     class LibVirt {
         
         val conn = new Connect("lxc:///", false)
+
+        def domainListActive() = {
+            try { 
+                println("List active: ")
+                for( i <- conn.listDomains()) {
+                    println(conn.domainLookupByID(i).getName())
+                }           
+            } catch {
+              case e: LibvirtException => println("error domainListActive")
+            }            
+        }
+
+        def domainListInactive() = {
+            try { 
+                println("List Inactive: ")
+                for( i <- conn.listDefinedDomains()) {
+                    println(i)
+                }           
+            } catch {
+              case e: LibvirtException => println("error domainListInactive")
+            }            
+        }
         
         def domainReboot(name: String) = {
             try { 

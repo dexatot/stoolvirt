@@ -41,6 +41,7 @@ object SToolVirt {
             case "resume"   => LibvirtWrapper.resumeAction(command.name)
             case "reboot"   => LibvirtWrapper.rebootAction(command.name)
             case "info"     => LibvirtWrapper.infoAction(command.name)
+            case "list"     => LibvirtWrapper.listAction(command.name)
             case _          => Console.println("not found command")
         }
     }    
