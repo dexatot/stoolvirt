@@ -50,7 +50,7 @@ object LibvirtWrapper {
 
     class LibVirt {
         
-        val conn = new Connect("lxc:///", true)
+        val conn = new Connect("lxc:///", false)
 
         def domainReboot(name: String) = {
             val domain = conn.domainLookupByName(name)
