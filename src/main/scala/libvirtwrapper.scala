@@ -11,7 +11,7 @@ object LibvirtWrapper {
     def createAction(parametrs: List[Property], name: String) = {
         
         val rootfs = "/opt/rootfs/" + name
-        var os = ""
+        var os = name
         var net = networkXml("default")
 
         for( property <- parametrs ) {
