@@ -37,9 +37,9 @@ object SToolVirt {
             case "create"   => LibvirtWrapper.createAction(command.properties, command.name)
             case "destroy"  => LibvirtWrapper.destroyAction(command.name)
             case "start"    => LibvirtWrapper.startAction(command.name)
-            case "suspend"     => LibvirtWrapper.suspendAction(command.name)
-            case "resume"     => LibvirtWrapper.resumeAction(command.name)
-            case "reboot"     => LibvirtWrapper.rebootAction(command.name)
+            case "suspend"  => LibvirtWrapper.suspendAction(command.name)
+            case "resume"   => LibvirtWrapper.resumeAction(command.name)
+            case "reboot"   => LibvirtWrapper.rebootAction(command.name)
             case "info"     => LibvirtWrapper.infoAction(command.name)
             case _          => Console.println("not found command")
         }
